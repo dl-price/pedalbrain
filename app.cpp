@@ -1,19 +1,19 @@
 //
-// pedalbrain
+// app.cpp
+// C++ code
+// ----------------------------------
+// Developed with embedXcode
+// http://embedXcode.weebly.com
 //
-// Description of the project
-// Developed with [embedXcode](http://embedXcode.weebly.com)
+// Project 		pedalbrain
 //
-// Author 		Daniel Price
+// Created by 	Daniel Price, 09/01/2017 16:32
 // 				Daniel Price
 //
-// Date			09/01/2017 16:22
-// Version		<#version#>
-//
-// Copyright	© Daniel Price, 2017
+// Copyright 	(c) Daniel Price, 2017
 // Licence		<#licence#>
 //
-// See         ReadMe.txt for references
+// See 			app.h and ReadMe.txt for references
 //
 
 
@@ -22,6 +22,9 @@
 #include "Wiring.h"
 #elif defined(MAPLE_IDE) // Maple specific
 #include "WProgram.h"
+#elif defined(ROBOTIS) // Robotis specific
+#include "libpandora_types.h"
+#include "pandora.h"
 #elif defined(MPIDE) // chipKIT specific
 #include "WProgram.h"
 #elif defined(DIGISPARK) // Digispark specific
@@ -32,51 +35,31 @@
 #include "LRF.h"
 #elif defined(MICRODUINO) // Microduino specific
 #include "Arduino.h"
-#elif defined(SPARK) || defined(PARTICLE) // Particle / Spark specific
-#include "Arduino.h"
 #elif defined(TEENSYDUINO) // Teensy specific
 #include "Arduino.h"
 #elif defined(REDBEARLAB) // RedBearLab specific
 #include "Arduino.h"
-#elif defined(ESP8266) // ESP8266 specific
+#elif defined(RFDUINO) // RFduino specific
 #include "Arduino.h"
+#elif defined(SPARK) // Spark specific
+#include "application.h"
 #elif defined(ARDUINO) // Arduino 1.0 and 1.5 specific
 #include "Arduino.h"
 #else // error
 #error Platform not defined
 #endif // end IDE
 
-#include "app.cpp"
-
-// Set parameters
-
-
-// Include application, user and local libraries
-
-
-// Define structures and classes
-
-
-// Define variables and constants
-
-
-// Prototypes
-
-
-// Utilities
-
-
-// Functions
-
-
-// Add setup code
-void setup()
+class app
 {
-app::setup();
-}
-
-// Add loop code
-void loop()
-{
-app::loop();
-}
+public:
+    static void setup()
+    {
+        pinMode(13, OUTPUT);
+    }
+    static void loop()
+    {
+        digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+        delay(1000);               // wait for a second
+        digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+        delay(1000);       }
+};
