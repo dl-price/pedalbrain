@@ -19,6 +19,7 @@
 
 // Library header
 #include "Arduino.h"
+#include "libraries/usb_midi/usb_api.h"
 #include "childApp.h"
 
 void childApp::setup()
@@ -29,8 +30,10 @@ void childApp::setup()
 void childApp::loop()
 {
     digitalWrite(13, HIGH);
+    usbMIDI.sendNoteOn(60,127,1);
     delay(1000);
     digitalWrite(13, LOW);
+    usbMIDI.sendNoteOff(60,0,1);
     delay(1000);
 }
 
