@@ -1,20 +1,22 @@
-//
-// pedalbrain
-//
-// Description of the project
-// Developed with [embedXcode](http://embedXcode.weebly.com)
-//
-// Author 		Daniel Price
-// 				Daniel Price
-//
-// Date			09/01/2017 16:22
-// Version		<#version#>
-//
-// Copyright	© Daniel Price, 2017
-// Licence		<#licence#>
-//
-// See         ReadMe.txt for references
-//
+///
+/// @file		app.h
+/// @brief		Library header
+/// @details	<#details#>
+/// @n
+/// @n @b		Project pedalbrain
+/// @n @a		Developed with [embedXcode](http://embedXcode.weebly.com)
+///
+/// @author		Daniel Price
+/// @author		Daniel Price
+///
+/// @date		09/01/2017 16:40
+/// @version	<#version#>
+///
+/// @copyright	(c) Daniel Price, 2017
+/// @copyright	<#licence#>
+///
+/// @see		ReadMe.txt for references
+///
 
 
 // Core library for code-sense - IDE-based
@@ -22,6 +24,9 @@
 #include "Wiring.h"
 #elif defined(MAPLE_IDE) // Maple specific
 #include "WProgram.h"
+#elif defined(ROBOTIS) // Robotis specific
+#include "libpandora_types.h"
+#include "pandora.h"
 #elif defined(MPIDE) // chipKIT specific
 #include "WProgram.h"
 #elif defined(DIGISPARK) // Digispark specific
@@ -32,51 +37,28 @@
 #include "LRF.h"
 #elif defined(MICRODUINO) // Microduino specific
 #include "Arduino.h"
-#elif defined(SPARK) || defined(PARTICLE) // Particle / Spark specific
-#include "Arduino.h"
 #elif defined(TEENSYDUINO) // Teensy specific
 #include "Arduino.h"
 #elif defined(REDBEARLAB) // RedBearLab specific
 #include "Arduino.h"
-#elif defined(ESP8266) // ESP8266 specific
+#elif defined(RFDUINO) // RFduino specific
 #include "Arduino.h"
+#elif defined(SPARK) // Spark specific
+#include "application.h"
 #elif defined(ARDUINO) // Arduino 1.0 and 1.5 specific
 #include "Arduino.h"
 #else // error
 #error Platform not defined
 #endif // end IDE
 
-#include "childApp.h"
+#ifndef app_cpp
+#define app_cpp
 
-// Set parameters
-
-
-// Include application, user and local libraries
-
-
-// Define structures and classes
-
-
-// Define variables and constants
-
-
-// Prototypes
-
-
-// Utilities
-
-
-// Functions
-
-
-// Add setup code
-void setup()
+class app
 {
-childApp::setup();
-}
+public:
+    static virtual void setup() = 0;
+    static virtual void loop() = 0;
+};
 
-// Add loop code
-void loop()
-{
-childApp::loop();
-}
+#endif // app_cpp
