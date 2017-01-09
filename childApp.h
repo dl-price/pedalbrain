@@ -58,8 +58,9 @@
 
 class childApp : public app
 {
-    static void setup() override;
-    static void loop() override;
+public:
+    void setup() override;
+    void loop() override;
 };
 
 #endif // childApp_cpp

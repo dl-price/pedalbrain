@@ -18,16 +18,20 @@
 
 
 // Library header
+#include "Arduino.h"
 #include "childApp.h"
 
 void childApp::setup()
 {
-    pinMode(13,OUPTUT);
+    pinMode(13, OUTPUT);
 }
 
 void childApp::loop()
 {
     digitalWrite(13, HIGH);
+    delay(1000);
+    digitalWrite(13, LOW);
+    delay(1000);
 }
 
 // Code

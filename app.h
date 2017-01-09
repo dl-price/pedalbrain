@@ -57,8 +57,8 @@
 class app
 {
 public:
-    static virtual void setup() = 0;
-    static virtual void loop() = 0;
+    virtual void setup() = 0;
+    virtual void loop() = 0;
 };
 
 #endif // app_cpp

@@ -70,13 +70,16 @@
 
 
 // Add setup code
+
+childApp *mainApp = new childApp();
+
 void setup()
 {
-childApp::setup();
+mainApp->setup();
 }
 
 // Add loop code
 void loop()
 {
-childApp::loop();
+mainApp->loop();
 }
