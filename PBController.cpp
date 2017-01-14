@@ -4,7 +4,9 @@
 
 void PBController::setup()
 {
+#ifdef ARDUINO
   pinMode(13,OUTPUT);
+#endif
   
 }
 
