@@ -2,10 +2,18 @@
 #define PBControllerH
 
 class PBController;
-#include "includes.h"
+#ifdef JUCE_APP_VERSION
+#include "../JuceLibraryCode/JuceHeader.h"
+#endif
 
 class PBController {
-  public:    
+  public:
+#ifdef JUCE_APP_VERSION
+    static MidiInput *usbMidiIn;
+    static MidiOutput *usbMidiOut;
+
+#endif
+    
     static void loop();
     static void setup();
 
