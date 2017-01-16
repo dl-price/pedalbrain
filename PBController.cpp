@@ -4,6 +4,7 @@
 #endif
 #ifdef ARDUINO
 #include <Arduino.h>
+#include <SD.h>
 #endif
 
 #ifdef JUCE_APP_VERSION
