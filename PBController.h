@@ -9,11 +9,20 @@ class PBController;
 #include <SD.h>
 #endif
 
-class PBController {
+#ifdef JUCE_APP_VERSION
+class PBController : public MidiInputCallback
+#endif
+#ifdef ARDUINO
+class PBController
+#endif
+{
   public:
+    PBController();
+    ~PBController();
 #ifdef JUCE_APP_VERSION
     static MidiInput *usbMidiIn;
     static MidiOutput *usbMidiOut;
+    static PBController *getInstance();
 
 #endif
 
@@ -23,8 +32,16 @@ static SdVolume volume;
 static SdFile root;
 #endif
     
-    static void loop();
-    static void setup();
+#ifdef ARDUINO
+    void loop();
+#endif
+#ifdef JUCE_APP_VERSION
+    void handleIncomingMidiMessage(MidiInput *source, const MidiMessage &message) override;
+#endif
+    void setup();
+    
+private:
+    static PBController *_instance;
 
 
 };

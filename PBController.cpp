@@ -19,6 +19,18 @@ SdVolume PBController::volume;
 SdFile PBController::root;
 #endif
 
+PBController *PBController::_instance;
+
+PBController::PBController()
+{
+    
+}
+
+PBController::~PBController()
+{
+    
+}
+
 void PBController::setup()
 {
 #ifdef ARDUINO
@@ -27,7 +39,7 @@ void PBController::setup()
 #endif
     
 #ifdef JUCE_APP_VERSION
-    //PBController::usbMidiIn = MidiInput::createNewDevice("PBrain", NULL);
+    PBController::usbMidiIn = MidiInput::createNewDevice("PBrain", this);
     PBController::usbMidiOut = MidiOutput::createNewDevice("PBrain");
 #endif
     
@@ -53,9 +65,25 @@ if (!SD.begin(BUILTIN_SDCARD)) {
   
 }
 
+#ifdef ARDUINO
 void PBController::loop()
 {
   
+}
+#endif
+
+PBController *PBController::getInstance()
+{
+    if(!PBController::_instance)
+    {
+        PBController::_instance = new PBController();
+    }
+    return PBController::_instance;
+}
+
+void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce::MidiMessage &message)
+{
+    
 }
 
 
