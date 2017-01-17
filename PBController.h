@@ -40,6 +40,7 @@ static SdFile root;
     void handleIncomingMidiMessage(MidiInput *source, const MidiMessage &message) override;
 #endif
     void setup();
+    void receivedPBSysex(String message);
     
 private:
     static PBController *_instance;

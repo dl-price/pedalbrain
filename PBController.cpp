@@ -6,6 +6,7 @@
 #include <Arduino.h>
 #include <SD.h>
 #include <SPI.h>
+#define usbMidi usbMIDI
 #endif
 
 #ifdef ARDUINO
@@ -64,7 +65,15 @@ if (!SD.begin(BUILTIN_SDCARD)) {
 #ifdef ARDUINO
 void PBController::loop()
 {
-  
+    while(usbMidi.read())
+    {
+        //usbMidi.sendSysEx(usbMidi.getData1(), usbMidi.getSysExArray());
+        //Serial.println("Send");
+        char *chars = (char*)usbMidi.getSysExArray();
+        String str = chars;
+        String str2 = str.substring(1, str.length()-1);
+        receivedPBSysex(str2);
+    }
 }
 #endif
 
@@ -82,11 +91,22 @@ void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce
 {
     if(message.isSysEx())
     {
-        Logger::outputDebugString(String::fromUTF8( (char*)message.getSysExData()).dropLastCharacters(1));
-        usbMidiOut->sendMessageNow(message);
+        //Logger::outputDebugString(String::fromUTF8( (char*)message.getSysExData()).dropLastCharacters(1));
+        //usbMidiOut->sendMessageNow(message);
+        receivedPBSysex(String::fromUTF8( (char*)message.getSysExData()).dropLastCharacters(1));
     }
 }
 #endif
+
+void PBController::receivedPBSysex(String message)
+{
+#ifdef JUCE_APP_VERSION
+    Logger::outputDebugString(message);
+#endif
+#ifdef ARDUINO
+    Serial.println(message);
+#endif
+}
 
 
 

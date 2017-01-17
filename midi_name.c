@@ -3,8 +3,8 @@
 
 #include <usb_names.h>
 
-#define MIDI_NAME   {'M','y',' ','M','I','D','I'}
-#define MIDI_NAME_LEN  7
+#define MIDI_NAME   {'P','B','r','a','i','n'}
+#define MIDI_NAME_LEN  6
 
 // Do not change this part.  This exact format is required by USB.
 
