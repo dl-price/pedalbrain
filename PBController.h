@@ -41,6 +41,7 @@ static SdFile root;
 #endif
     void setup();
     void receivedPBSysex(String message);
+    void sendPBSysex(String message);
     
 private:
     static PBController *_instance;
