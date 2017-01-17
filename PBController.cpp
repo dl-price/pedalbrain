@@ -8,11 +8,6 @@
 #include <SPI.h>
 #endif
 
-#ifdef JUCE_APP_VERSION
-MidiInput *PBController::usbMidiIn;
-MidiOutput *PBController::usbMidiOut;
-#endif
-
 #ifdef ARDUINO
 Sd2Card PBController::card;
 SdVolume PBController::volume;
@@ -39,8 +34,9 @@ void PBController::setup()
 #endif
     
 #ifdef JUCE_APP_VERSION
-    PBController::usbMidiIn = MidiInput::createNewDevice("PBrain", this);
-    PBController::usbMidiOut = MidiOutput::createNewDevice("PBrain");
+    usbMidiIn = MidiInput::createNewDevice("PBrain", this);
+    usbMidiOut = MidiOutput::createNewDevice("PBrain");
+    usbMidiIn->start();
 #endif
     
 #ifdef ARDUINO
@@ -81,10 +77,18 @@ PBController *PBController::getInstance()
     return PBController::_instance;
 }
 
+#ifdef JUCE_APP_VERSION
 void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce::MidiMessage &message)
 {
-    
+    if(message.isSysEx())
+    {
+        Logger::outputDebugString(String::fromUTF8( (char*)message.getSysExData()).dropLastCharacters(1));
+        usbMidiOut->sendMessageNow(message);
+    }
 }
+#endif
+
+
 
 
 

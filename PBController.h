@@ -19,10 +19,11 @@ class PBController
   public:
     PBController();
     ~PBController();
-#ifdef JUCE_APP_VERSION
-    static MidiInput *usbMidiIn;
-    static MidiOutput *usbMidiOut;
     static PBController *getInstance();
+#ifdef JUCE_APP_VERSION
+    MidiInput *usbMidiIn;
+    MidiOutput *usbMidiOut;
+    
 
 #endif
 
