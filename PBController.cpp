@@ -4,6 +4,7 @@
 #endif
 #ifdef ARDUINO
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <SD.h>
 #include <SPI.h>
 #define usbMidi usbMIDI
@@ -111,7 +112,7 @@ void PBController::receivedPBSysex(String message)
 {
   
     
-#ifdef JUCE_APP_VERSION
+/*#ifdef JUCE_APP_VERSION
     if(message.substring(0, 2).getHexValue32() == MessageType::RequestBoardInfo)
 #endif
 #ifdef ARDUINO
@@ -140,7 +141,24 @@ void PBController::receivedPBSysex(String message)
         break;
         //Serial.println(message.substring(2,4));
     }
-    }
+    }*/
+    
+#ifdef JUCE_APP_VERSION
+    var objVar = JSON::fromString(message);
+    DynamicObject *obj = objVar.getDynamicObject();
+    
+    Logger::outputDebugString(obj->getProperty("request"));
+#endif
+    
+#ifdef ARDUINO
+    StaticJsonBuffer<200> jsonBuffer;
+    
+    JsonObject &root = jsonBuffer.parseObject(message);
+    const char *request = root["request"];
+    Serial.println(request);
+    
+#endif
+    
 }
 
 void PBController::sendPBSysex(String message)
