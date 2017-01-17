@@ -7,6 +7,9 @@ class PBController;
 #endif
 #ifdef ARDUINO
 #include <SD.h>
+#include <ArduinoJson.h>
+
+extern StaticJsonBuffer<3000> jsonBuffer;
 #endif
 
 #ifdef JUCE_APP_VERSION
@@ -42,6 +45,9 @@ static SdFile root;
     void setup();
     void receivedPBSysex(String message);
     void sendPBSysex(String message);
+#ifdef ARDUINO
+    void sendPBSysex(JsonObject &root);
+#endif
     
     enum MessageType : uint8_t{
         RequestBoardInfo,

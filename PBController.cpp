@@ -14,6 +14,8 @@
 Sd2Card PBController::card;
 SdVolume PBController::volume;
 SdFile PBController::root;
+
+StaticJsonBuffer<3000> jsonBuffer = StaticJsonBuffer<3000>();
 #endif
 
 PBController *PBController::_instance;
@@ -151,15 +153,28 @@ void PBController::receivedPBSysex(String message)
 #endif
     
 #ifdef ARDUINO
-    StaticJsonBuffer<200> jsonBuffer;
-    
     JsonObject &root = jsonBuffer.parseObject(message);
     const char *request = root["request"];
     Serial.println(request);
     
+    JsonObject &root2 = jsonBuffer.createObject();
+    root2["send"] = "things";
+    
+    sendPBSysex(root2);
+    
 #endif
     
 }
+
+#ifdef ARDUINO
+void PBController::sendPBSysex(JsonObject &root)
+{
+    String output;
+    root.printTo(output);
+    String toSend = String((char)0xF0) + "}" + output + String((char)0x00) + String((char)0xF7);
+    usbMidi.sendSysEx(toSend.length(), (uint8_t*)toSend.c_str());
+}
+#endif
 
 void PBController::sendPBSysex(String message)
 {
@@ -167,13 +182,9 @@ void PBController::sendPBSysex(String message)
     
     Serial.println(message);
     String newMessage = String((char)0xF0) + "}" + message + String((char)0xF7);
-    
-    Serial.println("Start send");
-    Serial.println("after char");
-    
-    Serial.println("try");
+   
     usbMidi.sendSysEx(newMessage.length(), (uint8_t*)newMessage.c_str());
-    Serial.println("Done");
+ 
 #endif
 #ifdef JUCE_APP_VERSION
     String newMessage = "}" + message;
