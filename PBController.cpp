@@ -41,7 +41,7 @@ void PBController::setup()
 #endif
     
 #ifdef ARDUINO
-    Serial.begin(9600);
+    Serial.begin(38400);
     while(!Serial){}
 
 if (!SD.begin(BUILTIN_SDCARD)) {
@@ -109,32 +109,61 @@ void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce
 
 void PBController::receivedPBSysex(String message)
 {
-    if(message=="Head")
+  
+    
+#ifdef JUCE_APP_VERSION
+    if(message.substring(0, 2).getHexValue32() == MessageType::RequestBoardInfo)
+#endif
+#ifdef ARDUINO
+        if(strtoul(message.substring(0,2).c_str(),nullptr,16)==MessageType::RequestBoardInfo)
+#endif
     {
-        sendPBSysex("Shoulders");
+#ifdef JUCE_APP_VERSION
+        switch(message.substring(2, 4).getHexValue32())
+#endif
+        
+#ifdef ARDUINO
+        switch((uint8_t)strtoul(message.substring(2,4).c_str(), nullptr, 16))
+#endif
+        {
+    case RequestBoardInfoMessages::Name:
+        
+                sendPBSysex("Name requested");
+        break;
+    case RequestBoardInfoMessages::Type:
+        
+            sendPBSysex("Type requested");
+        break;
+    case RequestBoardInfoMessages::Version:
+        
+            sendPBSysex("Version requested");
+        break;
+        //Serial.println(message.substring(2,4));
     }
-    if(message=="Knees")
-    {
-        sendPBSysex("Toes");
     }
 }
 
 void PBController::sendPBSysex(String message)
 {
 #ifdef ARDUINO
+    
+    Serial.println(message);
     String newMessage = String((char)0xF0) + "}" + message + String((char)0xF7);
     
-    char *chars = new char();
+    Serial.println("Start send");
+    Serial.println("after char");
     
-    newMessage.toCharArray(chars, newMessage.length());
-    
-    usbMidi.sendSysEx(newMessage.length(), (uint8_t*)chars);
+    Serial.println("try");
+    usbMidi.sendSysEx(newMessage.length(), (uint8_t*)newMessage.c_str());
+    Serial.println("Done");
 #endif
 #ifdef JUCE_APP_VERSION
     String newMessage = "}" + message;
     CharPointer_UTF8 charPnt = newMessage.getCharPointer();
     
+    
     usbMidiOut->sendMessageNow(MidiMessage::createSysExMessage(charPnt, charPnt.sizeInBytes()));
+    
 #endif
 }
 

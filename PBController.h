@@ -43,6 +43,16 @@ static SdFile root;
     void receivedPBSysex(String message);
     void sendPBSysex(String message);
     
+    enum MessageType : uint8_t{
+        RequestBoardInfo,
+        SentBoardInfo
+    };
+    enum RequestBoardInfoMessages : uint8_t {
+        Name,
+        Type,
+        Version
+    };
+    
 private:
     static PBController *_instance;
 
