@@ -109,9 +109,13 @@ void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce
 
 void PBController::receivedPBSysex(String message)
 {
-    if(message=="yes")
+    if(message=="Head")
     {
-        sendPBSysex("no");
+        sendPBSysex("Shoulders");
+    }
+    if(message=="Knees")
+    {
+        sendPBSysex("Toes");
     }
 }
 
@@ -122,7 +126,7 @@ void PBController::sendPBSysex(String message)
     
     char *chars = new char();
     
-    newMessage.toCharArray(chars, newMessage.length()+1);
+    newMessage.toCharArray(chars, newMessage.length());
     
     usbMidi.sendSysEx(newMessage.length(), (uint8_t*)chars);
 #endif
