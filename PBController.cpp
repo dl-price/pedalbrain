@@ -171,7 +171,7 @@ void PBController::sendPBSysex(JsonObject &root)
 {
     String output;
     root.printTo(output);
-    String toSend = String((char)0xF0) + "}" + output + String((char)0x00) + String((char)0xF7);
+    String toSend = String((char)0xF0) + "}" + output + String((char)0xF7);
     usbMidi.sendSysEx(toSend.length(), (uint8_t*)toSend.c_str());
 }
 #endif
