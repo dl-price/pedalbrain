@@ -18,17 +18,7 @@ SdFile PBController::root;
 StaticJsonBuffer<3000> jsonBuffer = StaticJsonBuffer<3000>();
 #endif
 
-PBController *PBController::_instance;
-
-PBController::PBController()
-{
-    
-}
-
-PBController::~PBController()
-{
-    
-}
+PBController pbController;
 
 void PBController::setup()
 {
@@ -84,15 +74,6 @@ void PBController::loop()
     }
 }
 #endif
-
-PBController *PBController::getInstance()
-{
-    if(!PBController::_instance)
-    {
-        PBController::_instance = new PBController();
-    }
-    return PBController::_instance;
-}
 
 #ifdef JUCE_APP_VERSION
 void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce::MidiMessage &message)

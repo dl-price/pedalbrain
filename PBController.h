@@ -1,7 +1,15 @@
 #ifndef PBControllerH
 #define PBControllerH
 
+#define MAX_PAGES 15
+#define MAX_BUTTONS 11
+
 class PBController;
+
+#include "ButtonModel.h"
+#include "PageModel.h"
+#include "PresetModel.h"
+
 #ifdef JUCE_APP_VERSION
 #include "../JuceLibraryCode/JuceHeader.h"
 #endif
@@ -20,9 +28,8 @@ class PBController
 #endif
 {
   public:
-    PBController();
-    ~PBController();
-    static PBController *getInstance();
+    PBController(){};
+    ~PBController(){};
     const char *boardModel = "TestBoardA";
     const double firmwareVersion = 0.01;
     const char *boardName = "Dan's Board";
@@ -64,10 +71,12 @@ static SdFile root;
     };
     
 private:
-    static PBController *_instance;
+    PageModel pageModels[MAX_PAGES];
 
 
 };
+
+extern PBController pbController;
 
 
 
