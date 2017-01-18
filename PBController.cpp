@@ -154,16 +154,26 @@ void PBController::receivedPBSysex(String message)
     
 #ifdef ARDUINO
     JsonObject &root = jsonBuffer.parseObject(message);
-    const char *request = root["request"];
-    Serial.println(request);
     
-    JsonObject &root2 = jsonBuffer.createObject();
-    root2["send"] = "boardInfo";
-    root2["model"] = boardModel;
-    root2["version"] = firmwareVersion;
-    root2["name"] = boardName;
+    if(root["request"] == "boardInfo")
+    {
+        JsonObject &root2 = jsonBuffer.createObject();
+        root2["send"] = "boardInfo";
+        root2["model"] = boardModel;
+        root2["version"] = firmwareVersion;
+        root2["name"] = boardName;
+        
+        sendPBSysex(root2);
+    }
+    else if(root["request"] == "solidify")
+    {
+        digitalWrite(13, HIGH);
+        JsonObject &root2 = jsonBuffer.createObject();
+        root2["send"] = "solidified";
+        sendPBSysex(root2);
+    }
     
-    sendPBSysex(root2);
+    
     
 #endif
     
