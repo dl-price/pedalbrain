@@ -23,6 +23,10 @@ class PBController
     PBController();
     ~PBController();
     static PBController *getInstance();
+    const char *boardModel = "TestBoardA";
+    const double firmwareVersion = 0.01;
+    const char *boardName = "Dan's Board";
+    
 #ifdef JUCE_APP_VERSION
     MidiInput *usbMidiIn;
     MidiOutput *usbMidiOut;

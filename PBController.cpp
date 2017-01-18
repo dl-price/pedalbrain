@@ -158,7 +158,10 @@ void PBController::receivedPBSysex(String message)
     Serial.println(request);
     
     JsonObject &root2 = jsonBuffer.createObject();
-    root2["send"] = "things";
+    root2["send"] = "boardInfo";
+    root2["model"] = boardModel;
+    root2["version"] = firmwareVersion;
+    root2["name"] = boardName;
     
     sendPBSysex(root2);
     
