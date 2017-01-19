@@ -25,6 +25,7 @@ public:
     int _maxPC;
     bool _sendPC;
     int _index = -1;
+    String _type;
     
 };
 

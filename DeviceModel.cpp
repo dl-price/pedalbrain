@@ -13,6 +13,14 @@ void DeviceModel::updateFromJson(JsonObject &root)
     model->_name = root["name"].asString();
     model->_channel = (int)root["channel"];
     model->_index = (int)root["index"];
+    if(root.containsKey("type"))
+    {
+    model->_type = root["type"].asString();
+    }
+    else
+    {
+        model->_type = "";
+    }
     
     pbController.devicesChanged = true;
 }
@@ -60,6 +68,9 @@ void DeviceModel::writeToJson(JsonObject &root)
             root["index"] = _index;
             root["name"] = _name;
             root["channel"] = _channel;
+
+            root["type"] = _type;
+            
         }
 
 void DeviceModel::writeAllToFile()
@@ -90,6 +101,7 @@ void DeviceModel::loadFromFile(int index)
     _index = index;
     _name = json["name"].asString();
     _channel = (int)json["channel"];
+        _type = json["type"].asString();
     
     Serial.println(_name);
     }
@@ -112,6 +124,8 @@ void DeviceModel::sendViaSysex()
     json["index"] = _index;
     json["name"] = _name;
     json["channel"] = _channel;
+    json["type"] = _type;
+    
     
     pbController.sendPBSysex(json);
 }
