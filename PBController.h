@@ -3,19 +3,27 @@
 
 #define MAX_PAGES 15
 #define MAX_BUTTONS 11
+#define MAX_DEVICES 16
 
 class PBController;
+extern PBController pbController;
+
 
 #include "ButtonModel.h"
 #include "PageModel.h"
 #include "PresetModel.h"
+#include "DeviceModel.h"
+
 
 #ifdef JUCE_APP_VERSION
 #include "../JuceLibraryCode/JuceHeader.h"
 #endif
 #ifdef ARDUINO
 #include <SD.h>
+#ifndef JsonH
+#define JsonH
 #include <ArduinoJson.h>
+#endif
 
 extern StaticJsonBuffer<3000> jsonBuffer;
 #endif
@@ -60,23 +68,21 @@ static SdFile root;
     void sendPBSysex(JsonObject &root);
 #endif
     
-    enum MessageType : uint8_t{
-        RequestBoardInfo,
-        SentBoardInfo
-    };
-    enum RequestBoardInfoMessages : uint8_t {
-        Name,
-        Type,
-        Version
-    };
+
+    PageModel pageModels[MAX_PAGES ];
+    DeviceModel deviceModels[MAX_DEVICES ];
     
-private:
-    PageModel pageModels[MAX_PAGES];
+    bool devicesChanged = false;
+    unsigned long devicesSaved = 0;
+    
+    void sendAllParametersViaSysex();
 
 
 };
 
-extern PBController pbController;
+
+
+
 
 
 

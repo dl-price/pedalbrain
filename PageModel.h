@@ -10,8 +10,11 @@ public:
     PageModel(){};
     ~PageModel(){};
     
+    
+    
 private:
     ButtonModel _buttonModels[MAX_BUTTONS];
+    char *_name;
     
 };
 

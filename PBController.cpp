@@ -1,4 +1,4 @@
-#include "PBController.h"
+
 #ifdef JUCE_APP_VERSION
 #include "../JuceLibraryCode/JuceHeader.h"
 #endif
@@ -10,18 +10,22 @@
 #define usbMidi usbMIDI
 #endif
 
+#include "PBController.h"
+#include "DeviceModel.h"
+
 #ifdef ARDUINO
 Sd2Card PBController::card;
 SdVolume PBController::volume;
 SdFile PBController::root;
 
-StaticJsonBuffer<3000> jsonBuffer = StaticJsonBuffer<3000>();
 #endif
 
 PBController pbController;
 
+
 void PBController::setup()
 {
+   
 #ifdef ARDUINO
   pinMode(13,OUTPUT);
     digitalWrite(13, LOW);
@@ -51,6 +55,8 @@ if (!SD.begin(BUILTIN_SDCARD)) {
   else {
     Serial.println("example.txt doesn't exist.");  
   }
+    
+    DeviceModel::loadAllFromFile();
 #endif
   
 }
@@ -58,10 +64,15 @@ if (!SD.begin(BUILTIN_SDCARD)) {
 #ifdef ARDUINO
 void PBController::loop()
 {
+    if(millis() - devicesSaved> 5000 && devicesChanged)
+    {
+        Serial.println("Saving devices");
+        DeviceModel::writeAllToFile();
+        devicesSaved = millis();
+        devicesChanged = false;
+    }
     while(usbMidi.read())
     {
-        //usbMidi.sendSysEx(usbMidi.getData1(), usbMidi.getSysExArray());
-        //Serial.println("Send");
         char *chars = (char*)usbMidi.getSysExArray();
         String str = chars;
         
@@ -82,12 +93,14 @@ void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce
     {
         //Logger::outputDebugString(String::fromUTF8( (char*)message.getSysExData()).dropLastCharacters(1));
         //usbMidiOut->sendMessageNow(message);
+        
         String newStr = String::fromUTF8( (char*)message.getSysExData());
         if(newStr.getCharPointer()[0]==(char)0x7D)
         {
             receivedPBSysex(newStr.substring(1));
         }
     }
+    
 }
 #endif
 
@@ -95,36 +108,7 @@ void PBController::receivedPBSysex(String message)
 {
   
     
-/*#ifdef JUCE_APP_VERSION
-    if(message.substring(0, 2).getHexValue32() == MessageType::RequestBoardInfo)
-#endif
-#ifdef ARDUINO
-        if(strtoul(message.substring(0,2).c_str(),nullptr,16)==MessageType::RequestBoardInfo)
-#endif
-    {
-#ifdef JUCE_APP_VERSION
-        switch(message.substring(2, 4).getHexValue32())
-#endif
-        
-#ifdef ARDUINO
-        switch((uint8_t)strtoul(message.substring(2,4).c_str(), nullptr, 16))
-#endif
-        {
-    case RequestBoardInfoMessages::Name:
-        
-                sendPBSysex("Name requested");
-        break;
-    case RequestBoardInfoMessages::Type:
-        
-            sendPBSysex("Type requested");
-        break;
-    case RequestBoardInfoMessages::Version:
-        
-            sendPBSysex("Version requested");
-        break;
-        //Serial.println(message.substring(2,4));
-    }
-    }*/
+
     
 #ifdef JUCE_APP_VERSION
     var objVar = JSON::fromString(message);
@@ -134,8 +118,13 @@ void PBController::receivedPBSysex(String message)
 #endif
     
 #ifdef ARDUINO
+    DynamicJsonBuffer jsonBuffer;
     JsonObject &root = jsonBuffer.parseObject(message);
-    
+    if(root["send"] == "device")
+    {
+        DeviceModel::updateFromJson(root["model"]);
+        
+    }
     if(root["request"] == "boardInfo")
     {
         JsonObject &root2 = jsonBuffer.createObject();
@@ -153,8 +142,10 @@ void PBController::receivedPBSysex(String message)
         root2["send"] = "solidified";
         sendPBSysex(root2);
     }
-    
-    
+    else if(root["request"] == "allParameters")
+    {
+        sendAllParametersViaSysex();
+    }
     
 #endif
     
@@ -188,6 +179,11 @@ void PBController::sendPBSysex(String message)
     usbMidiOut->sendMessageNow(MidiMessage::createSysExMessage(charPnt, charPnt.sizeInBytes()));
     
 #endif
+}
+
+void PBController::sendAllParametersViaSysex()
+{
+    DeviceModel::sendAllViaSysex();
 }
 
 
