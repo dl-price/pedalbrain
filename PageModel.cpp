@@ -6,6 +6,7 @@
 #include <SD.h>
 #include <SPI.h>
 
+PageModel *PageModel::allModels[MAX_PAGES];
 
 PageModel::PageModel(int newPage) : PBModel(newPage)
 {
@@ -14,12 +15,9 @@ PageModel::PageModel(int newPage) : PBModel(newPage)
 
 void PageModel::updateFromJson(JsonObject &root)
 {
-    PageModel *model = pbController.getPage((int)root["page"]);
+    _page = _index + 1;
+    _name = root["name"].asString();
     
-    model->_page = _index + 1;
-    model->_name = root["name"].asString();
-    
-    pbController.pagesChanged = true;
 }
 
 String PageModel::getFilename()
@@ -40,26 +38,12 @@ void PageModel::writeToJson(JsonObject &root)
     
 }
 
-void PageModel::writeAllToFile()
+void PageModel::initAllModels()
 {
-    for(int i=0; i < sizeof(pbController.pageModels)/sizeof(PageModel*); i++)
+    for (int i=0; i< MAX_PAGES;i++)
     {
-        pbController.pageModels[i]->writeToFile();
-    }
-}
-
-void PageModel::loadAllFromFile()
-{
-    for (int i=0; i < sizeof(pbController.pageModels)/sizeof(PageModel*); i++)
-    {
-        pbController.pageModels[i]->loadFromFile();
-    }
-}
-
-void PageModel::sendAllViaSysex()
-{
-    for(int i=0; i < sizeof(pbController.pageModels)/sizeof(PageModel*); i++)
-    {
-        pbController.pageModels[i]->sendViaSysex();
+        PageModel *model = new PageModel(i);
+        PageModel::allModels[i] = model;
+        model->loadFromFile();
     }
 }

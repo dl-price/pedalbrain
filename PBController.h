@@ -70,14 +70,6 @@ static SdFile root;
     
     PageModel *getPage(int pageId);
     
-    PageModel *pageModels[MAX_PAGES ];
-    DeviceModel deviceModels[MAX_DEVICES ];
-    
-    bool devicesChanged = false;
-    bool pagesChanged = false;
-    unsigned long devicesSaved = 0;
-    unsigned long pagesSaved = 0;
-    
     void sendAllParametersViaSysex();
 
 

@@ -25,10 +25,7 @@ PBController pbController = PBController();
 
 PBController::PBController()
 {
-    for(int i=0;i < MAX_PAGES; i++)
-    {
-        pageModels[i] = new PageModel(i+1);
-    }
+    
 }
 
 void PBController::setup()
@@ -55,17 +52,10 @@ if (!SD.begin(BUILTIN_SDCARD)) {
   }
   Serial.println("initialization done.");
 
-  File myFile = SD.open("example.txt", FILE_WRITE);
-  myFile.close();
-  if (SD.exists("example.txt")){ 
-    Serial.println("example.txt exists.");
-  }
-  else {
-    Serial.println("example.txt doesn't exist.");  
-  }
+    PageModel::initAllModels();
+    DeviceModel::initAllModels();
     
-    DeviceModel::loadAllFromFile();
-    PageModel::loadAllFromFile();
+    
 #endif
   
 }
@@ -73,7 +63,7 @@ if (!SD.begin(BUILTIN_SDCARD)) {
 #ifdef ARDUINO
 void PBController::loop()
 {
-    if(millis() - devicesSaved> 5000 && devicesChanged)
+    /*if(millis() - devicesSaved> 5000 && devicesChanged)
     {
         Serial.println("Saving devices");
         DeviceModel::writeAllToFile();
@@ -86,7 +76,7 @@ void PBController::loop()
         PageModel::writeAllToFile();
         pagesSaved = millis();
         pagesChanged = false;
-    }
+    }*/
     while(usbMidi.read())
     {
         char *chars = (char*)usbMidi.getSysExArray();
@@ -136,7 +126,7 @@ void PBController::receivedPBSysex(String message)
 #ifdef ARDUINO
     DynamicJsonBuffer jsonBuffer;
     JsonObject &root = jsonBuffer.parseObject(message);
-    if(root["send"] == "device")
+    /*if(root["send"] == "device")
     {
         DeviceModel::updateFromJson(root["model"]);
         
@@ -145,7 +135,7 @@ void PBController::receivedPBSysex(String message)
     {
         JsonObject &model = root["model"];
         pbController.pageModels[(int)model["page"]-1]->updateFromJson(model);
-    }
+    }*/
     if(root["request"] == "boardInfo")
     {
         JsonObject &root2 = jsonBuffer.createObject();
@@ -204,14 +194,10 @@ void PBController::sendPBSysex(String message)
 
 void PBController::sendAllParametersViaSysex()
 {
-    DeviceModel::sendAllViaSysex();
-    PageModel::sendAllViaSysex();
+    
 }
 
-PageModel *PBController::getPage(int pageId)
-{
-    return pageModels[pageId-1];
-}
+
 
 
 

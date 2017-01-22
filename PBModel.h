@@ -23,6 +23,9 @@ public:
     void loadFromFile(String filename);
     void loadFromFile();
     void sendViaSysex();
+    virtual String getDirectory(){ return ""; };
+    void markForSaving();
+    void updateFromSysex(JsonObject &root);
     
     
 protected:
@@ -30,6 +33,8 @@ protected:
     int _index;
     //bool _spaceSaving;
     const String _modelName;
+    unsigned long _lastSaved = 0;
+    unsigned long _lastUpdated = 0;
 };
 
 

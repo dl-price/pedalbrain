@@ -1,22 +1,25 @@
 #ifndef DeviceModelH
 #define DeviceModelH
 
+#include "PBController.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include "PBModel.h"
 
 class DeviceModel;
 
-class DeviceModel {
+class DeviceModel : public PBModel {
 public:
-    static void updateFromJson(JsonObject &root);
-    void writeToFile();
-    void loadFromFile(int index);
-    static void writeAllToFile();
-    static void loadAllFromFile();
-    void writeToJson(JsonObject &root);
-    static void sendAllViaSysex();
-    void sendViaSysex();
+    DeviceModel(int newIndex);
+    void updateFromJson(JsonObject &root) override;
+    void writeToJson(JsonObject &root) override;
+    String getFilename() override;
+    String getDirectory() override;
+    static void initAllModels();
+    
+private:
+    static DeviceModel *allModels[MAX_DEVICES];
+
 
 
     String _name;

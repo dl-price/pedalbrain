@@ -16,13 +16,13 @@ public:
     ~PageModel(){};
     
     void updateFromJson(JsonObject &root) override;
-    static void writeAllToFile();
     void writeToJson(JsonObject &root) override;
-    static void loadAllFromFile();
-    static void sendAllViaSysex();
     String getFilename() override;
+    String getDirectory() override { return "pages";};
+    static void initAllModels();
     
 private:
+    static PageModel *allModels[MAX_PAGES];
     ButtonModel _buttonModels[MAX_BUTTONS];
     int _page;
     String _name;

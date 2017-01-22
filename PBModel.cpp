@@ -31,6 +31,23 @@ void PBModel::writeToFile(String filename)
     }*/
     DynamicJsonBuffer jsonBuffer;
     
+    
+        const char *dirName = getDirectory().c_str();
+        if(!SD.exists(dirName))
+        {
+            if(!SD.mkdir(dirName))
+            {
+                Serial.println("Error creating directory:");
+                Serial.println(dirName);
+                return;
+            }
+            else
+            {
+                Serial.println("Created directory:");
+                Serial.println(dirName);
+            }
+        }
+    
     SD.remove(filename.c_str());
     File file = SD.open(filename.c_str(), FILE_WRITE);
     JsonObject &root = jsonBuffer.createObject();
@@ -40,6 +57,8 @@ void PBModel::writeToFile(String filename)
     root.printTo(output);
     file.write(output.c_str());
     file.close();
+    
+    _lastSaved = millis();
 }
 
 void PBModel::loadFromFile()
@@ -72,4 +91,10 @@ void PBModel::sendViaSysex()
     writeToJson(model);
     
     pbController.sendPBSysex(root);
+}
+
+void PBModel::updateFromSysex(JsonObject &root)
+{
+    updateFromJson(root["model"]);
+    markForSaving();
 }
