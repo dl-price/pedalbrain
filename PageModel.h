@@ -23,7 +23,7 @@ public:
     
 private:
     static PageModel *allModels[MAX_PAGES];
-    ButtonModel _buttonModels[MAX_BUTTONS];
+    ButtonModel *_buttonModels[MAX_BUTTONS];
     int _page;
     String _name;
     const String _modelName = "page";
