@@ -36,7 +36,7 @@ class PBController
 #endif
 {
   public:
-    PBController(){};
+    PBController();
     ~PBController(){};
     const char *boardModel = "TestBoardA";
     const double firmwareVersion = 0.01;
@@ -68,12 +68,15 @@ static SdFile root;
     void sendPBSysex(JsonObject &root);
 #endif
     
-
-    PageModel pageModels[MAX_PAGES ];
+    PageModel *getPage(int pageId);
+    
+    PageModel *pageModels[MAX_PAGES ];
     DeviceModel deviceModels[MAX_DEVICES ];
     
     bool devicesChanged = false;
+    bool pagesChanged = false;
     unsigned long devicesSaved = 0;
+    unsigned long pagesSaved = 0;
     
     void sendAllParametersViaSysex();
 

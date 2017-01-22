@@ -12,6 +12,7 @@
 
 #include "PBController.h"
 #include "DeviceModel.h"
+#include "PageModel.h"
 
 #ifdef ARDUINO
 Sd2Card PBController::card;
@@ -20,8 +21,15 @@ SdFile PBController::root;
 
 #endif
 
-PBController pbController;
+PBController pbController = PBController();
 
+PBController::PBController()
+{
+    for(int i=0;i < MAX_PAGES; i++)
+    {
+        pageModels[i] = new PageModel(i+1);
+    }
+}
 
 void PBController::setup()
 {
@@ -57,6 +65,7 @@ if (!SD.begin(BUILTIN_SDCARD)) {
   }
     
     DeviceModel::loadAllFromFile();
+    PageModel::loadAllFromFile();
 #endif
   
 }
@@ -70,6 +79,13 @@ void PBController::loop()
         DeviceModel::writeAllToFile();
         devicesSaved = millis();
         devicesChanged = false;
+    }
+    if(millis() - pagesSaved > 5000 && pagesChanged)
+    {
+        Serial.println("Saving pages");
+        PageModel::writeAllToFile();
+        pagesSaved = millis();
+        pagesChanged = false;
     }
     while(usbMidi.read())
     {
@@ -124,6 +140,10 @@ void PBController::receivedPBSysex(String message)
     {
         DeviceModel::updateFromJson(root["model"]);
         
+    }
+    else if(root["send"] == "page")
+    {
+        PageModel::updateFromJson(root["model"]);
     }
     if(root["request"] == "boardInfo")
     {
@@ -184,8 +204,13 @@ void PBController::sendPBSysex(String message)
 void PBController::sendAllParametersViaSysex()
 {
     DeviceModel::sendAllViaSysex();
+    PageModel::sendAllViaSysex();
 }
 
+PageModel *PBController::getPage(int pageId)
+{
+    return pageModels[pageId-1];
+}
 
 
 
