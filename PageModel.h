@@ -6,27 +6,27 @@ class PageModel;
 #include "PBController.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include "PBModel.h"
 #include "ButtonModel.h"
 
 
-class PageModel {
+class PageModel : public PBModel {
 public:
-    PageModel(int newPage) {_page = newPage;};
+    PageModel(int newPage);
     ~PageModel(){};
     
-    static void updateFromJson(JsonObject &root);
-    void writeToFile();
+    void updateFromJson(JsonObject &root) override;
     static void writeAllToFile();
-    void writeToJson(JsonObject &root);
-    void loadFromFile(int id);
+    void writeToJson(JsonObject &root) override;
     static void loadAllFromFile();
-    void sendViaSysex();
     static void sendAllViaSysex();
+    String getFilename() override;
     
 private:
     ButtonModel _buttonModels[MAX_BUTTONS];
     int _page;
     String _name;
+    const String _modelName = "page";
     
 };
 

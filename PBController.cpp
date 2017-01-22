@@ -143,7 +143,8 @@ void PBController::receivedPBSysex(String message)
     }
     else if(root["send"] == "page")
     {
-        PageModel::updateFromJson(root["model"]);
+        JsonObject &model = root["model"];
+        pbController.pageModels[(int)model["page"]-1]->updateFromJson(model);
     }
     if(root["request"] == "boardInfo")
     {
