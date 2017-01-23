@@ -32,7 +32,8 @@ void PBModel::writeToFile(String filename)
     DynamicJsonBuffer jsonBuffer;
     
     
-        const char *dirName = getDirectory().c_str();
+    char dirName[20];
+    strcpy(dirName, getDirectory().c_str());
         if(!SD.exists(dirName))
         {
             if(!SD.mkdir(dirName))

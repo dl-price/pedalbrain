@@ -56,7 +56,6 @@ void PageModel::sendAllViaSysex()
     for(int i=0; i < MAX_PAGES; i++)
     {
         allModels[i]->sendViaSysex();
-        Serial.println("not too fast");
     }
 }
 
