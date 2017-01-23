@@ -59,3 +59,13 @@ void PageModel::sendAllViaSysex()
         Serial.println("not too fast");
     }
 }
+
+PageModel *PageModel::getPage(int i)
+{
+    return allModels[i+1];
+}
+
+PageModel *PageModel::getPageForIndex(int i)
+{
+    return allModels[i];
+}

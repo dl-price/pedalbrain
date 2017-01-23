@@ -129,16 +129,15 @@ void PBController::receivedPBSysex(String message)
 #ifdef ARDUINO
     DynamicJsonBuffer jsonBuffer;
     JsonObject &root = jsonBuffer.parseObject(message);
-    /*if(root["send"] == "device")
+    if(root["send"] == "device")
     {
-        DeviceModel::updateFromJson(root["model"]);
+        DeviceModel::getDevice((int)root["model"]["index"])->updateFromSysex(root);
         
     }
     else if(root["send"] == "page")
     {
-        JsonObject &model = root["model"];
-        pbController.pageModels[(int)model["page"]-1]->updateFromJson(model);
-    }*/
+        PageModel::getPageForIndex((int)root["model"]["index"])->updateFromSysex(root);
+    }
     if(root["request"] == "boardInfo")
     {
         JsonObject &root2 = jsonBuffer.createObject();

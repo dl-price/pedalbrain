@@ -22,6 +22,8 @@ public:
     static void initAllModels();
     static void sendAllViaSysex();
     String getSysexId() override { return "page";};
+    static PageModel *getPage(int i);
+    static PageModel *getPageForIndex(int i);
     
 private:
     static PageModel *allModels[MAX_PAGES];

@@ -102,3 +102,8 @@ void PBModel::updateFromSysex(JsonObject &root)
     updateFromJson(root["model"]);
     markForSaving();
 }
+
+void PBModel::markForSaving()
+{
+    writeToFile();
+}

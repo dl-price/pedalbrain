@@ -70,3 +70,8 @@ void DeviceModel::sendAllViaSysex()
         allModels[i]->sendViaSysex();
     }
 }
+
+DeviceModel *DeviceModel::getDevice(int i)
+{
+    return allModels[i];
+}

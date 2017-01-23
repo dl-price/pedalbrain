@@ -18,6 +18,7 @@ public:
     static void initAllModels();
     static void sendAllViaSysex();
     String getSysexId() override { return "device";};
+    static DeviceModel *getDevice(int i);
     
 private:
     static DeviceModel *allModels[MAX_DEVICES];
