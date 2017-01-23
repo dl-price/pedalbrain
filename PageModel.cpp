@@ -22,7 +22,9 @@ void PageModel::updateFromJson(JsonObject &root)
 
 String PageModel::getFilename()
 {
-    char fileName[15] = "Pages/";
+    char fileName[30];
+    strcpy(fileName, getDirectory().c_str());
+    strcat(fileName, "/");
     char indexName[2];
     sprintf(indexName, "%d", _index+1);
     strcat(fileName, indexName);
@@ -33,6 +35,7 @@ String PageModel::getFilename()
 
 void PageModel::writeToJson(JsonObject &root)
 {
+    root["index"] = _index;
     root["page"] = _index+1;
     root["name"] = _name;
     
@@ -45,5 +48,14 @@ void PageModel::initAllModels()
         PageModel *model = new PageModel(i);
         PageModel::allModels[i] = model;
         model->loadFromFile();
+    }
+}
+
+void PageModel::sendAllViaSysex()
+{
+    for(int i=0; i < MAX_PAGES; i++)
+    {
+        allModels[i]->sendViaSysex();
+        Serial.println("not too fast");
     }
 }

@@ -26,6 +26,7 @@ public:
     virtual String getDirectory(){ return ""; };
     void markForSaving();
     void updateFromSysex(JsonObject &root);
+    virtual String getSysexId() = 0;
     
     
 protected:

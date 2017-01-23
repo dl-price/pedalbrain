@@ -20,8 +20,9 @@ String DeviceModel::getDirectory()
 
 String DeviceModel::getFilename()
 {
-    char *fileName;
-    fileName = (char*)getDirectory().c_str();
+    char fileName[30];
+    strcpy(fileName,getDirectory().c_str());
+    strcat(fileName, "/");
     char indexName[2];
     sprintf(indexName, "%d", _index);
     strcat(fileName, indexName);
@@ -54,10 +55,18 @@ void DeviceModel::writeToJson(JsonObject &root)
 
 void DeviceModel::initAllModels()
 {
-    for (int i=0; i< MAX_DEVICES;i++)
+    for (int i=0; i < MAX_DEVICES;i++)
     {
         DeviceModel *model = new DeviceModel(i);
         DeviceModel::allModels[i] = model;
         model->loadFromFile();
+    }
+}
+
+void DeviceModel::sendAllViaSysex()
+{
+    for (int i=0; i < MAX_DEVICES; i++)
+    {
+        allModels[i]->sendViaSysex();
     }
 }

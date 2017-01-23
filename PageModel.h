@@ -20,13 +20,15 @@ public:
     String getFilename() override;
     String getDirectory() override { return "pages";};
     static void initAllModels();
+    static void sendAllViaSysex();
+    String getSysexId() override { return "page";};
     
 private:
     static PageModel *allModels[MAX_PAGES];
     ButtonModel *_buttonModels[MAX_BUTTONS];
-    int _page;
-    String _name;
+    String _name = "";
     const String _modelName = "page";
+    int _page;
     
 };
 

@@ -70,8 +70,11 @@ void PBModel::loadFromFile(String filename)
 {
     DynamicJsonBuffer jsonBuffer;
     
+    Serial.println(filename);
+    
     if(SD.exists(filename.c_str()))
     {
+        
         File file = SD.open(filename.c_str(), FILE_READ);
         char buf[1024];
         file.read(buf, file.size());
@@ -86,7 +89,8 @@ void PBModel::sendViaSysex()
     DynamicJsonBuffer jsonBuffer;
     
     JsonObject &root = jsonBuffer.createObject();
-    root["send"] = _modelName;
+    root["send"] = getSysexId();
+    
     JsonObject &model = root.createNestedObject("model");
     writeToJson(model);
     

@@ -53,7 +53,9 @@ if (!SD.begin(BUILTIN_SDCARD)) {
   Serial.println("initialization done.");
 
     PageModel::initAllModels();
+    Serial.println("Initialized pages");
     DeviceModel::initAllModels();
+    Serial.println("Initialized devices");
     
     
 #endif
@@ -79,6 +81,7 @@ void PBController::loop()
     }*/
     while(usbMidi.read())
     {
+        Serial.println("Received");
         char *chars = (char*)usbMidi.getSysExArray();
         String str = chars;
         
@@ -194,7 +197,8 @@ void PBController::sendPBSysex(String message)
 
 void PBController::sendAllParametersViaSysex()
 {
-    
+    PageModel::sendAllViaSysex();
+    DeviceModel::sendAllViaSysex();
 }
 
 

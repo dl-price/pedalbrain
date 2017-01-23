@@ -16,18 +16,20 @@ public:
     String getFilename() override;
     String getDirectory() override;
     static void initAllModels();
+    static void sendAllViaSysex();
+    String getSysexId() override { return "device";};
     
 private:
     static DeviceModel *allModels[MAX_DEVICES];
 
 
-
-    String _name;
+    const String _modelName = "device";
+    String _name = "";
     String _typeId;
-    int _channel;
-    int _presets;
-    int _maxPC;
-    bool _sendPC;
+    int _channel = 1;
+    int _presets = 0;
+    int _maxPC = 0;
+    bool _sendPC = false;
     int _index = -1;
     String _type;
     
