@@ -57,6 +57,8 @@ if (!SD.begin(BUILTIN_SDCARD)) {
     DeviceModel::initAllModels();
     Serial.println("Initialized devices");
     
+    xLog("Finished setup");
+    
     
 #endif
   
@@ -136,7 +138,13 @@ void PBController::receivedPBSysex(String message)
     }
     else if(root["send"] == "page")
     {
+        pbController.xLog("got page");
         PageModel::getPageForIndex((int)root["model"]["index"])->updateFromSysex(root);
+    }
+    else if(root["send"] == "button")
+    {
+        pbController.xLog("got button");
+        ButtonModel::getButtonForIndices((int)root["model"]["pageIndex"], (int)root["model"]["index"])->updateFromSysex(root);
     }
     if(root["request"] == "boardInfo")
     {
@@ -198,6 +206,15 @@ void PBController::sendAllParametersViaSysex()
 {
     PageModel::sendAllViaSysex();
     DeviceModel::sendAllViaSysex();
+}
+
+void PBController::xLog(String message)
+{
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject &obj = jsonBuffer.createObject();
+    obj["send"] = "xLog";
+    obj["message"] = message;
+    sendPBSysex(obj);
 }
 
 

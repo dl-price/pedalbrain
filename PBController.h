@@ -25,7 +25,7 @@ extern PBController pbController;
 #include <ArduinoJson.h>
 #endif
 
-extern StaticJsonBuffer<3000> jsonBuffer;
+
 #endif
 
 #ifdef JUCE_APP_VERSION
@@ -64,6 +64,7 @@ static SdFile root;
     void setup();
     void receivedPBSysex(String message);
     void sendPBSysex(String message);
+    void xLog(String message);
 #ifdef ARDUINO
     void sendPBSysex(JsonObject &root);
 #endif

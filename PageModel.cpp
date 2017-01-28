@@ -10,7 +10,12 @@ PageModel *PageModel::allModels[MAX_PAGES];
 
 PageModel::PageModel(int newPage) : PBModel(newPage)
 {
-    
+    for(int i = 0; i < MAX_BUTTONS; i++)
+    {
+        ButtonModel *model2 = new ButtonModel(_index, i);
+        _buttonModels[i] = model2;
+        model2->loadFromFile();
+    }
 }
 
 void PageModel::updateFromJson(JsonObject &root)
@@ -43,11 +48,13 @@ void PageModel::writeToJson(JsonObject &root)
 
 void PageModel::initAllModels()
 {
-    for (int i=0; i< MAX_PAGES;i++)
+    for (int i=0; i < MAX_PAGES;i++)
     {
+        pbController.xLog("Loop");
         PageModel *model = new PageModel(i);
         PageModel::allModels[i] = model;
         model->loadFromFile();
+        
     }
 }
 
@@ -56,6 +63,11 @@ void PageModel::sendAllViaSysex()
     for(int i=0; i < MAX_PAGES; i++)
     {
         allModels[i]->sendViaSysex();
+        for(int i2=0; i2 < MAX_BUTTONS; i2++)
+        {
+            pbController.xLog(String(i2));
+            allModels[i]->getButtonForIndex(i2)->sendViaSysex();
+        }
     }
 }
 
@@ -67,4 +79,9 @@ PageModel *PageModel::getPage(int i)
 PageModel *PageModel::getPageForIndex(int i)
 {
     return allModels[i];
+}
+
+ButtonModel *PageModel::getButtonForIndex(int i)
+{
+    return _buttonModels[i];
 }
