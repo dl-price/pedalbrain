@@ -50,7 +50,6 @@ void PageModel::initAllModels()
 {
     for (int i=0; i < MAX_PAGES;i++)
     {
-        pbController.xLog("Loop");
         PageModel *model = new PageModel(i);
         PageModel::allModels[i] = model;
         model->loadFromFile();
@@ -65,7 +64,6 @@ void PageModel::sendAllViaSysex()
         allModels[i]->sendViaSysex();
         for(int i2=0; i2 < MAX_BUTTONS; i2++)
         {
-            pbController.xLog(String(i2));
             allModels[i]->getButtonForIndex(i2)->sendViaSysex();
         }
     }

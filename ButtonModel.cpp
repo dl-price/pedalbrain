@@ -12,7 +12,6 @@ ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 
 void ButtonModel::updateFromJson(JsonObject &root)
 {
-    pbController.xLog("Got button");
     _page = root["pageIndex"];
     if(root.containsKey("name"))
     {

@@ -48,16 +48,19 @@ void PBController::setup()
 
 if (!SD.begin(BUILTIN_SDCARD)) {
     Serial.println("initialization failed!");
+    pbController.xLog("initialization failed!");
     return;
   }
   Serial.println("initialization done.");
+    pbController.xLog("initialization done.");
 
     PageModel::initAllModels();
     Serial.println("Initialized pages");
+    pbController.xLog("initialization done.");
     DeviceModel::initAllModels();
     Serial.println("Initialized devices");
-    
-    xLog("Finished setup");
+    pbController.xLog("initialization done.");
+
     
     
 #endif
@@ -84,6 +87,7 @@ void PBController::loop()
     while(usbMidi.read())
     {
         Serial.println("Received");
+        pbController.xLog("initialization done.");
         char *chars = (char*)usbMidi.getSysExArray();
         String str = chars;
         
@@ -138,12 +142,10 @@ void PBController::receivedPBSysex(String message)
     }
     else if(root["send"] == "page")
     {
-        pbController.xLog("got page");
         PageModel::getPageForIndex((int)root["model"]["index"])->updateFromSysex(root);
     }
     else if(root["send"] == "button")
     {
-        pbController.xLog("got button");
         ButtonModel::getButtonForIndices((int)root["model"]["pageIndex"], (int)root["model"]["index"])->updateFromSysex(root);
     }
     if(root["request"] == "boardInfo")
@@ -186,7 +188,6 @@ void PBController::sendPBSysex(String message)
 {
 #ifdef ARDUINO
     
-    Serial.println(message);
     String newMessage = String((char)0xF0) + "}" + message + String((char)0xF7);
    
     usbMidi.sendSysEx(newMessage.length(), (uint8_t*)newMessage.c_str());

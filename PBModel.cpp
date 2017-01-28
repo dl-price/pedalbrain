@@ -39,13 +39,17 @@ void PBModel::writeToFile(String filename)
             if(!SD.mkdir(dirName))
             {
                 Serial.println("Error creating directory:");
+                pbController.xLog("Error creating directory:");
                 Serial.println(dirName);
+                pbController.xLog(dirName);
                 return;
             }
             else
             {
                 Serial.println("Created directory:");
+                pbController.xLog("Created directory:");
                 Serial.println(dirName);
+                pbController.xLog(dirName);
             }
         }
     
@@ -70,8 +74,6 @@ void PBModel::loadFromFile()
 void PBModel::loadFromFile(String filename)
 {
     DynamicJsonBuffer jsonBuffer;
-    
-    Serial.println(filename);
     
     if(SD.exists(filename.c_str()))
     {
