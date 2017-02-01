@@ -42,6 +42,8 @@ class PBController
     const double firmwareVersion = 0.01;
     const char *boardName = "Dan's Board";
     
+    PageModel *getCurrentPage();
+    
 #ifdef JUCE_APP_VERSION
     MidiInput *usbMidiIn;
     MidiOutput *usbMidiOut;
@@ -72,6 +74,9 @@ static SdFile root;
     PageModel *getPage(int pageId);
     
     void sendAllParametersViaSysex();
+    
+private:
+    int _currPage = 1;
 
 
 };

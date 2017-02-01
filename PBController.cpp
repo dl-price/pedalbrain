@@ -228,6 +228,11 @@ void PBController::xLog(String message)
     sendPBSysex(obj);
 }
 
+PageModel *PBController::getCurrentPage()
+{
+    return PageModel::getPage(_currPage);
+}
+
 
 
 
