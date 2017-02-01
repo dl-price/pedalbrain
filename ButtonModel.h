@@ -18,6 +18,8 @@ public:
     String getDirectory() override;
     String getSysexId() override { return "button";};
     
+    void press(bool down = true);
+    
 private:
     int _page;
     int index;
@@ -26,6 +28,10 @@ private:
     int type = 0;
     int ledOn = 0;
     int ledOff = 0;
+    
+    bool state = false;
+    
+    void pressed();
 };
 
 #endif

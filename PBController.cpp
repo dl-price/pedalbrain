@@ -148,6 +148,16 @@ void PBController::receivedPBSysex(String message)
     {
         ButtonModel::getButtonForIndices((int)root["model"]["pageIndex"], (int)root["model"]["index"])->updateFromSysex(root);
     }
+    else if(root["send"] == "buttonState")
+    {
+        int btnIndex = root["buttonIndex"];
+        int pageIndex = root["pageIndex"];
+        int state = root["state"];
+        
+        ButtonModel *btn = PageModel::getPageForIndex(pageIndex)->getButtonForIndex(btnIndex);
+        
+        btn->press(state);
+    }
     if(root["request"] == "boardInfo")
     {
         JsonObject &root2 = jsonBuffer.createObject();

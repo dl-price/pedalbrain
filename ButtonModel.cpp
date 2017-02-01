@@ -79,3 +79,29 @@ String ButtonModel::getDirectory()
         return String(dir);
     
 }
+
+void ButtonModel::press(bool down)
+{
+    if(down){
+    state = !state;
+    }
+    
+    pressed();
+}
+
+void ButtonModel::pressed()
+{
+    DynamicJsonBuffer jsonBuffer;
+    
+    JsonObject &root = jsonBuffer.createObject();
+
+    root["send"] = "buttonState";
+    root["pageIndex"] = _page;
+    root["buttonIndex"] = _index;
+    root["state"] = state;
+    
+    pbController.sendPBSysex(root);
+
+}
+
+
