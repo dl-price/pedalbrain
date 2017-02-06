@@ -60,8 +60,6 @@ if (!SD.begin(BUILTIN_SDCARD)) {
     DeviceModel::initAllModels();
     Serial.println("Initialized devices");
     pbController.xLog("initialization done.");
-
-    
     
 #endif
   

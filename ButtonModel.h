@@ -28,10 +28,12 @@ private:
     int type = 0;
     int ledOn = 0;
     int ledOff = 0;
+    int audioId = 0;
     
     bool state = false;
     
     void pressed();
+    void sendState();
 };
 
 #endif

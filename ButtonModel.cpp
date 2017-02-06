@@ -33,6 +33,10 @@ void ButtonModel::updateFromJson(JsonObject &root)
     {
         label = "";
     }
+    if(root.containsKey("mainAudioId"))
+    {
+        audioId = root["mainAudioId"];
+    }
 
     
 }
@@ -66,6 +70,10 @@ void ButtonModel::writeToJson(JsonObject &root)
     {
     root["label"] = label;
     }
+    if(audioId)
+    {
+        root["mainAudioId"] = audioId;
+    }
     
 }
 
@@ -86,22 +94,36 @@ void ButtonModel::press(bool down)
     state = !state;
     }
     
+    sendState();
+    
     pressed();
 }
 
 void ButtonModel::pressed()
 {
+    if(type == 15)
+    {
+        // Audio loop
+        //pinMode(audioId, OUTPUT);
+        pbController.xLog("Relay change");
+        pbController.xLog(audioId);
+        digitalWrite(audioId, state);
+    }
+
+}
+
+void ButtonModel::sendState()
+{
     DynamicJsonBuffer jsonBuffer;
     
     JsonObject &root = jsonBuffer.createObject();
-
+    
     root["send"] = "buttonState";
     root["pageIndex"] = _page;
     root["buttonIndex"] = _index;
     root["state"] = state;
     
     pbController.sendPBSysex(root);
-
 }
 
 
