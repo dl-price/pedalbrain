@@ -126,4 +126,12 @@ void ButtonModel::sendState()
     pbController.sendPBSysex(root);
 }
 
+void ButtonModel::saveSpace()
+{
+    _name = "";
+    label = "";
+    
+    PBModel::saveSpace();
+}
+
 

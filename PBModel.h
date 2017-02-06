@@ -27,12 +27,14 @@ public:
     void markForSaving();
     void updateFromSysex(JsonObject &root);
     virtual String getSysexId() = 0;
+    virtual void saveSpace() {_spaceSaving = true;};
     
     
 protected:
     PBModel *_parent;
     int _index;
-    //bool _spaceSaving;
+    bool _spaceSaving = true;
+    
     const String _modelName;
     unsigned long _lastSaved = 0;
     unsigned long _lastUpdated = 0;

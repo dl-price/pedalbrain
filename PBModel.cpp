@@ -64,6 +64,8 @@ void PBModel::writeToFile(String filename)
     file.close();
     
     _lastSaved = millis();
+    
+    saveSpace();
 }
 
 void PBModel::loadFromFile()
@@ -84,11 +86,16 @@ void PBModel::loadFromFile(String filename)
         JsonObject &root = jsonBuffer.parseObject(buf);
         
         updateFromJson(root);
+        _spaceSaving = false;
     }
 }
 
 void PBModel::sendViaSysex()
 {
+    if(_spaceSaving)
+    {
+        loadFromFile();
+    }
     DynamicJsonBuffer jsonBuffer;
     
     JsonObject &root = jsonBuffer.createObject();
@@ -98,10 +105,17 @@ void PBModel::sendViaSysex()
     writeToJson(model);
     
     pbController.sendPBSysex(root);
+    
+    saveSpace();
+    
 }
 
 void PBModel::updateFromSysex(JsonObject &root)
 {
+    if(_spaceSaving)
+    {
+        loadFromFile();
+    }
     updateFromJson(root["model"]);
     markForSaving();
 }

@@ -34,6 +34,8 @@ private:
     
     void pressed();
     void sendState();
+    
+    void saveSpace() override;
 };
 
 #endif
