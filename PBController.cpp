@@ -13,6 +13,7 @@
 #include "PBController.h"
 #include "DeviceModel.h"
 #include "PageModel.h"
+#include <MIDI.h>
 
 #ifdef ARDUINO
 Sd2Card PBController::card;
@@ -61,6 +62,8 @@ if (!SD.begin(BUILTIN_SDCARD)) {
     Serial.println("Initialized devices");
     pbController.xLog("initialization done.");
     
+    MIDI.begin(MIDI_CHANNEL_OMNI);
+    
 #endif
   
 }
@@ -82,6 +85,8 @@ void PBController::loop()
         pagesSaved = millis();
         pagesChanged = false;
     }*/
+    //MIDI.sendControlChange(127,127,16);
+    
     while(usbMidi.read())
     {
         Serial.println("Received");

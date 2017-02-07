@@ -1,6 +1,7 @@
 #include "ButtonModel.h"
 #include "PageModel.h"
 #include <ArduinoJson.h>
+#include <MIDI.h>
 
 ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 {
@@ -101,6 +102,14 @@ void ButtonModel::press(bool down)
 
 void ButtonModel::pressed()
 {
+    if(state)
+    {
+        MIDI.sendControlChange(102,127,1);
+    }
+    else
+    {
+        MIDI.sendControlChange(102,0,1);
+    }
     if(type == 15)
     {
         // Audio loop
