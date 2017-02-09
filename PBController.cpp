@@ -48,19 +48,13 @@ void PBController::setup()
     while(!Serial){}
 
 if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("initialization failed!");
-    pbController.xLog("initialization failed!");
+    pbController.xLog("SD initialization failed!");
     return;
   }
-  Serial.println("initialization done.");
-    pbController.xLog("initialization done.");
+    pbController.xLog("SD initialization done.");
 
     PageModel::initAllModels();
-    Serial.println("Initialized pages");
-    pbController.xLog("initialization done.");
     DeviceModel::initAllModels();
-    Serial.println("Initialized devices");
-    pbController.xLog("initialization done.");
     
     MIDI.begin(MIDI_CHANNEL_OMNI);
     
@@ -89,14 +83,14 @@ void PBController::loop()
     
     while(usbMidi.read())
     {
-        Serial.println("Received");
-        pbController.xLog("initialization done.");
-        char *chars = (char*)usbMidi.getSysExArray();
-        String str = chars;
+        String str = (char*)usbMidi.getSysExArray();
         
+        pbController.xLog("midi");
         String str2 = str.substring(1, str.length());
-        if(str2.startsWith("}",0))
+        pbController.xLog(str);
+        if(str.charAt(1) == '}')
         {
+            pbController.xLog("sysex");
             String str3 = str2.substring(1, str2.length());
             receivedPBSysex(str3);
         }
@@ -125,7 +119,7 @@ void PBController::handleIncomingMidiMessage(juce::MidiInput *source, const juce
 void PBController::receivedPBSysex(String message)
 {
   
-    
+    pbController.xLog("Received SysEx");
 
     
 #ifdef JUCE_APP_VERSION
