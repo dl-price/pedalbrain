@@ -36,6 +36,7 @@ private:
     void sendState();
     
     void saveSpace() override;
+    void handleJsonNode(JsonObject::iterator it);
 };
 
 #endif

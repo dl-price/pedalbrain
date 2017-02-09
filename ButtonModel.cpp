@@ -13,32 +13,10 @@ ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 
 void ButtonModel::updateFromJson(JsonObject &root)
 {
-    _page = root["pageIndex"];
-    if(root.containsKey("name"))
+    for (JsonObject::iterator it=root.begin(); it!=root.end(); ++it)
     {
-    _name = root["name"].asString();
+        handleJsonNode(it);
     }
-    else
-    {
-        _name = "";
-    }
-
-    type = root["type"];
-    ledOn = root["ledOn"];
-    ledOff = root["ledOff"];
-    if(root.containsKey("label"))
-    {
-    label = root["label"].asString();
-    }
-    else
-    {
-        label = "";
-    }
-    if(root.containsKey("mainAudioId"))
-    {
-        audioId = root["mainAudioId"];
-    }
-
     
 }
 
@@ -141,6 +119,42 @@ void ButtonModel::saveSpace()
     label = "";
     
     PBModel::saveSpace();
+}
+
+void ButtonModel::handleJsonNode(JsonObject::iterator it)
+{
+    String key = it->key;
+    
+    if(key == "pageIndex")
+    {
+        _page = it->value;
+    }
+    else if(key == "name")
+    {
+        _name = it->value.asString();
+    }
+    else if(key == "label")
+    {
+        label = it->value.asString();
+    }
+    else if(key == "type")
+    {
+        type = it->value;
+    }
+    else if(key == "ledOn")
+    {
+        ledOn = it->value;
+    }
+    else if(key == "ledOff")
+    {
+        ledOff = it->value;
+    }
+    else if(key == "mainAudioId")
+    {
+        audioId = it->value;
+    }
+
+    
 }
 
 
