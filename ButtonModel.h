@@ -6,10 +6,12 @@ class ButtonModel;
 #include "PBModel.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <LinkedList.h>
+//#include <IonDB.h>
 
 class ButtonModel : public PBModel {
 public:
-    ButtonModel(int newPage, int newIndex) : PBModel(newIndex), _page(newPage){};
+    ButtonModel(int newPage, int newIndex);
     static ButtonModel *getButtonForIndices(int pageIndex, int index);
     
     void updateFromJson(JsonObject &root) override;
@@ -40,6 +42,15 @@ private:
     void sendState();
     
     void saveSpace() override;
+    
+    void setupParameterMap() override;
+    bool parameterIsInt(String str);
+    bool parameterIsString(String str);
+    static LinkedList<String> *parameterMap;
+    LinkedList<String> *getParameterMap() { return parameterMap;};
+    
+
+    
 };
 
 #endif

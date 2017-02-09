@@ -2,6 +2,19 @@
 #include "PageModel.h"
 #include <ArduinoJson.h>
 #include <MIDI.h>
+#include <LinkedList.h>
+//#include <IonDB.h>
+
+LinkedList<String> *ButtonModel::parameterMap;
+
+ButtonModel::ButtonModel(int newPage, int newIndex)  : PBModel(newIndex), _page(newPage) {
+    if(!parameterMap)
+    {
+        parameterMap = new LinkedList<String>();
+        ButtonModel::setupParameterMap();
+    }
+    allocateParameterList();
+}
 
 ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 {
@@ -14,19 +27,19 @@ ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 void ButtonModel::updateFromJson(JsonObject &root)
 {
     _page = root["pageIndex"];
-    if(root.containsKey("name"))
+    /*if(root.containsKey("name"))
     {
     _name = root["name"].asString();
     }
     else
     {
         _name = "";
-    }
+    }*/
 
-    type = root["type"];
-    ledOn = root["ledOn"];
-    ledOff = root["ledOff"];
-    if(root.containsKey("label"))
+    //setParameter("type", (int)root["type"]);
+    //ledOn = root["ledOn"];
+    //ledOff = root["ledOff"];
+    /*if(root.containsKey("label"))
     {
     label = root["label"].asString();
     }
@@ -53,9 +66,24 @@ void ButtonModel::updateFromJson(JsonObject &root)
     if(root.containsKey("mainAudioCC"))
     {
         audioCC = root["mainAudioCC"];
-    }
-
+    }*/
     
+    for(int i = 0; i < getParameterMap()->size(); i++)
+    {
+        if(root.containsKey(getParameterMap()->get(i)))
+        {
+        if(parameterIsInt(getParameterMap()->get(i)))
+           {
+               setParameter(getParameterMap()->get(i), (int)root[getParameterMap()->get(i)]);
+               
+           }
+        else if(parameterIsString(getParameterMap()->get(i)))
+        {
+            setParameter(getParameterMap()->get(i), root[getParameterMap()->get(i)].asString());
+            
+        }
+        }
+    }
 }
 
 String ButtonModel::getFilename()
@@ -76,11 +104,14 @@ void ButtonModel::writeToJson(JsonObject &root)
 {
     root["index"] = _index;
     root["pageIndex"] = _page;
-    if(_name.length())
+    /*if(_name.length())
     {
     root["name"] = _name;
     }
-    root["type"] = type;
+    if(getParameterIfInt("type"))
+    {
+        root["type"] = *getParameterIfInt("type");
+    }
     root["ledOn"] = ledOn;
     root["ledOff"] = ledOff;
     if(label.length())
@@ -106,6 +137,18 @@ void ButtonModel::writeToJson(JsonObject &root)
     if(audioOff)
     {
         root["mainAudioOff"] = audioOff;
+    }*/
+    
+    for(int i = 0; i < getParameterMap()->size(); i++)
+    {
+        if(getParameterIfInt(getParameterMap()->get(i)))
+        {
+            root[getParameterMap()->get(i)] = *getParameterIfInt(getParameterMap()->get(i));
+        }
+        else if(getParameterIfString(getParameterMap()->get(i)))
+        {
+            root[getParameterMap()->get(i)] = *getParameterIfString(getParameterMap()->get(i));
+        }
     }
     
 }
@@ -174,5 +217,51 @@ void ButtonModel::saveSpace()
     
     PBModel::saveSpace();
 }
+
+void ButtonModel::setupParameterMap()
+{
+    PBModel::setupParameterMap();
+    
+    parameterMap->add("label");
+    parameterMap->add("name");
+    parameterMap->add("type");
+    parameterMap->add("ledOn");
+    parameterMap->add("ledOff");
+    parameterMap->add("audioId");
+    parameterMap->add("audioCC");
+    parameterMap->add("audioOn");
+    parameterMap->add("audioOff");
+}
+
+bool ButtonModel::parameterIsInt(String str)
+{
+    if(PBModel::parameterIsInt(str))
+        return true;
+    
+    if(str == "type" ||
+       str == "ledOn" ||
+       str == "ledOff" ||
+       str == "audioId" ||
+       str == "audioCC" ||
+       str == "audioOn" ||
+       str == "audioOff")
+        return true;
+    
+    return false;
+}
+
+bool ButtonModel::parameterIsString(String str)
+{
+    if(PBModel::parameterIsString(str))
+        return true;
+    
+    if(str == "name" ||
+       str == "label")
+        return true;
+    
+    return false;
+}
+
+
 
 
