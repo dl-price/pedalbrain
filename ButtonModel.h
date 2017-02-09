@@ -29,6 +29,10 @@ private:
     int ledOn = 0;
     int ledOff = 0;
     int audioId = 0;
+    int deviceId = 0;
+    int audioCC = 0;
+    int audioOn = 0;
+    int audioOff = 0;
     
     bool state = false;
     

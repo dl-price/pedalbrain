@@ -38,6 +38,22 @@ void ButtonModel::updateFromJson(JsonObject &root)
     {
         audioId = root["mainAudioId"];
     }
+    if(root.containsKey("mainDeviceId"))
+    {
+        deviceId = root["mainDeviceId"];
+    }
+    if(root.containsKey("mainAudioOn"))
+    {
+        audioOn = root["mainAudioOn"];
+    }
+    if(root.containsKey("mainAudioOff"))
+    {
+        audioOff = root["mainAudioOff"];
+    }
+    if(root.containsKey("mainAudioCC"))
+    {
+        audioCC = root["mainAudioCC"];
+    }
 
     
 }
@@ -74,6 +90,22 @@ void ButtonModel::writeToJson(JsonObject &root)
     if(audioId)
     {
         root["mainAudioId"] = audioId;
+    }
+    if(deviceId)
+    {
+        root["mainDeviceId"] = deviceId;
+    }
+    if(audioCC)
+    {
+        root["mainAudioCC"] = audioCC;
+    }
+    if(audioOn)
+    {
+        root["mainAudioOn"] = audioOn;
+    }
+    if(audioOff)
+    {
+        root["mainAudioOff"] = audioOff;
     }
     
 }
