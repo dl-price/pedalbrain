@@ -65,7 +65,7 @@ void PBModel::writeToFile(String filename)
     
     _lastSaved = millis();
     
-    saveSpace();
+    //saveSpace();
 }
 
 void PBModel::loadFromFile()
@@ -92,10 +92,10 @@ void PBModel::loadFromFile(String filename)
 
 void PBModel::sendViaSysex()
 {
-    if(_spaceSaving)
-    {
-        loadFromFile();
-    }
+    //if(_spaceSaving)
+    //{
+       // loadFromFile();
+    //}
     DynamicJsonBuffer jsonBuffer;
     
     JsonObject &root = jsonBuffer.createObject();
@@ -106,16 +106,15 @@ void PBModel::sendViaSysex()
     
     pbController.sendPBSysex(root);
     
-    saveSpace();
-    
+    //saveSpace();
 }
 
 void PBModel::updateFromSysex(JsonObject &root)
 {
-    if(_spaceSaving)
-    {
+    //if(_spaceSaving)
+    //{
         loadFromFile();
-    }
+    //}
     updateFromJson(root["model"]);
     markForSaving();
 }
@@ -123,4 +122,74 @@ void PBModel::updateFromSysex(JsonObject &root)
 void PBModel::markForSaving()
 {
     writeToFile();
+}
+
+bool PBModel::parameterIsInt(String str)
+{
+    return false;
+}
+
+bool PBModel::parameterIsString(String str)
+{
+    return false;
+}
+
+int *PBModel::getParameterIfInt(String str)
+{
+    for(int i=0; i < getParameterMap()->size(); i++)
+    {
+        if(getParameterMap()->get(i) == str)
+        {
+            return intParameterList.get(i);
+        }
+    }
+    return NULL;
+}
+
+String *PBModel::getParameterIfString(String str)
+{
+    for(int i=0; i < getParameterMap()->size(); i++)
+    {
+        if(getParameterMap()->get(i) == str)
+        {
+            return stringParameterList.get(i);
+        }
+    }
+    return NULL;
+}
+
+void PBModel::allocateParameterList()
+{
+    for(int i=0; i< getParameterMap()->size(); i++)
+    {
+        intParameterList.add(NULL);
+        stringParameterList.add(NULL);
+    }
+}
+
+void PBModel::setParameter(String str, int newInt)
+{
+    for(int i=0; i < getParameterMap()->size(); i++)
+    {
+        if(getParameterMap()->get(i) == str)
+        {
+            delete intParameterList.get(i);
+            intParameterList.set(i, new int(newInt));
+        }
+    }
+}
+
+void PBModel::setParameter(String str, String newString)
+{
+    for(int i=0; i < getParameterMap()->size(); i++)
+    {
+        if(getParameterMap()->get(i) == str)
+        {
+            delete stringParameterList.get(i);
+            stringParameterList.set(i, new String(newString));
+            
+        }
+    }
+    
+   
 }

@@ -6,10 +6,12 @@ class ButtonModel;
 #include "PBModel.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <LinkedList.h>
+//#include <IonDB.h>
 
 class ButtonModel : public PBModel {
 public:
-    ButtonModel(int newPage, int newIndex) : PBModel(newIndex), _page(newPage){};
+    ButtonModel(int newPage, int newIndex);
     static ButtonModel *getButtonForIndices(int pageIndex, int index);
     
     void updateFromJson(JsonObject &root) override;
@@ -29,6 +31,10 @@ private:
     int ledOn = 0;
     int ledOff = 0;
     int audioId = 0;
+    int deviceId = 0;
+    int audioCC = 0;
+    int audioOn = 0;
+    int audioOff = 0;
     
     bool state = false;
     
@@ -36,7 +42,15 @@ private:
     void sendState();
     
     void saveSpace() override;
+
     void handleJsonNode(JsonObject::iterator it);
+
+    
+
+    
+
+    
+
 };
 
 #endif

@@ -2,6 +2,13 @@
 #include "PageModel.h"
 #include <ArduinoJson.h>
 #include <MIDI.h>
+#include <LinkedList.h>
+//#include <IonDB.h>
+
+
+ButtonModel::ButtonModel(int newPage, int newIndex)  : PBModel(newIndex), _page(newPage) {
+
+}
 
 ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 {
@@ -13,11 +20,13 @@ ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 
 void ButtonModel::updateFromJson(JsonObject &root)
 {
+
     for (JsonObject::iterator it=root.begin(); it!=root.end(); ++it)
+
     {
         handleJsonNode(it);
     }
-    
+
 }
 
 String ButtonModel::getFilename()
@@ -52,6 +61,22 @@ void ButtonModel::writeToJson(JsonObject &root)
     if(audioId)
     {
         root["mainAudioId"] = audioId;
+    }
+    if(deviceId)
+    {
+        root["mainDeviceId"] = deviceId;
+    }
+    if(audioCC)
+    {
+        root["mainAudioCC"] = audioCC;
+    }
+    if(audioOn)
+    {
+        root["mainAudioOn"] = audioOn;
+    }
+    if(audioOff)
+    {
+        root["mainAudioOff"] = audioOff;
     }
     
 }
@@ -121,6 +146,7 @@ void ButtonModel::saveSpace()
     PBModel::saveSpace();
 }
 
+
 void ButtonModel::handleJsonNode(JsonObject::iterator it)
 {
     String key = it->key;
@@ -156,5 +182,3 @@ void ButtonModel::handleJsonNode(JsonObject::iterator it)
 
     
 }
-
-
