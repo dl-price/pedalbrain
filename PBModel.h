@@ -7,7 +7,7 @@ class PBModel;
 #include <ArduinoJson.h>
 #include <SD.h>
 #include <SPI.h>
-#include <LinkedList.h>
+
 
 class PBModel
 {
@@ -39,17 +39,7 @@ protected:
     const String _modelName;
     unsigned long _lastSaved = 0;
     unsigned long _lastUpdated = 0;
-    virtual void setupParameterMap() {};
-    virtual bool parameterIsInt(String str);
-    virtual bool parameterIsString(String str);
-    virtual LinkedList<String> *getParameterMap() {return NULL;};
-    LinkedList<int*> intParameterList;
-    LinkedList<String*> stringParameterList;
-    int *getParameterIfInt(String str);
-    String *getParameterIfString(String str);
-    void setParameter(String str, int newInt);
-    void setParameter(String str, String newString);
-    void allocateParameterList();
+
 };
 
 

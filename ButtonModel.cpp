@@ -2,7 +2,6 @@
 #include "PageModel.h"
 #include <ArduinoJson.h>
 #include <MIDI.h>
-#include <LinkedList.h>
 //#include <IonDB.h>
 
 
@@ -20,7 +19,6 @@ ButtonModel *ButtonModel::getButtonForIndices(int pageIndex, int index)
 
 void ButtonModel::updateFromJson(JsonObject &root)
 {
-
     for (JsonObject::iterator it=root.begin(); it!=root.end(); ++it)
 
     {
@@ -58,26 +56,21 @@ void ButtonModel::writeToJson(JsonObject &root)
     {
     root["label"] = label;
     }
-    if(audioId)
-    {
+
         root["mainAudioId"] = audioId;
-    }
-    if(deviceId)
-    {
+    
+
         root["mainDeviceId"] = deviceId;
-    }
-    if(audioCC)
-    {
+    
+
         root["mainAudioCC"] = audioCC;
-    }
-    if(audioOn)
-    {
+    
+ 
         root["mainAudioOn"] = audioOn;
-    }
-    if(audioOff)
-    {
+    
+   
         root["mainAudioOff"] = audioOff;
-    }
+    
     
 }
 
@@ -151,6 +144,8 @@ void ButtonModel::handleJsonNode(JsonObject::iterator it)
 {
     String key = it->key;
     
+    pbController.xLog(key);
+    
     if(key == "pageIndex")
     {
         _page = it->value;
@@ -179,6 +174,20 @@ void ButtonModel::handleJsonNode(JsonObject::iterator it)
     {
         audioId = it->value;
     }
-
-    
+    else if(key == "mainDeviceId")
+    {
+        deviceId = it->value;
+    }
+    else if(key == "mainAudioCC")
+    {
+        audioCC = it->value;
+    }
+    else if(key == "mainAudioOn")
+    {
+        audioOn = it->value;
+    }
+    else if(key == "mainAudioOff")
+    {
+        audioOff = it->value;
+    }
 }

@@ -6,7 +6,6 @@ class ButtonModel;
 #include "PBModel.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <LinkedList.h>
 //#include <IonDB.h>
 
 class ButtonModel : public PBModel {

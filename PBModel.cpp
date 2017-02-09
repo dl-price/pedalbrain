@@ -31,7 +31,6 @@ void PBModel::writeToFile(String filename)
     }*/
     DynamicJsonBuffer jsonBuffer;
     
-    
     char dirName[20];
     strcpy(dirName, getDirectory().c_str());
         if(!SD.exists(dirName))
@@ -62,6 +61,8 @@ void PBModel::writeToFile(String filename)
     root.printTo(output);
     file.write(output.c_str());
     file.close();
+    
+    pbController.xLog("save");
     
     _lastSaved = millis();
     
@@ -113,8 +114,9 @@ void PBModel::updateFromSysex(JsonObject &root)
 {
     //if(_spaceSaving)
     //{
-        loadFromFile();
+        //loadFromFile();
     //}
+    pbController.xLog("Update from SysEx");
     updateFromJson(root["model"]);
     markForSaving();
 }
@@ -124,72 +126,4 @@ void PBModel::markForSaving()
     writeToFile();
 }
 
-bool PBModel::parameterIsInt(String str)
-{
-    return false;
-}
 
-bool PBModel::parameterIsString(String str)
-{
-    return false;
-}
-
-int *PBModel::getParameterIfInt(String str)
-{
-    for(int i=0; i < getParameterMap()->size(); i++)
-    {
-        if(getParameterMap()->get(i) == str)
-        {
-            return intParameterList.get(i);
-        }
-    }
-    return NULL;
-}
-
-String *PBModel::getParameterIfString(String str)
-{
-    for(int i=0; i < getParameterMap()->size(); i++)
-    {
-        if(getParameterMap()->get(i) == str)
-        {
-            return stringParameterList.get(i);
-        }
-    }
-    return NULL;
-}
-
-void PBModel::allocateParameterList()
-{
-    for(int i=0; i< getParameterMap()->size(); i++)
-    {
-        intParameterList.add(NULL);
-        stringParameterList.add(NULL);
-    }
-}
-
-void PBModel::setParameter(String str, int newInt)
-{
-    for(int i=0; i < getParameterMap()->size(); i++)
-    {
-        if(getParameterMap()->get(i) == str)
-        {
-            delete intParameterList.get(i);
-            intParameterList.set(i, new int(newInt));
-        }
-    }
-}
-
-void PBModel::setParameter(String str, String newString)
-{
-    for(int i=0; i < getParameterMap()->size(); i++)
-    {
-        if(getParameterMap()->get(i) == str)
-        {
-            delete stringParameterList.get(i);
-            stringParameterList.set(i, new String(newString));
-            
-        }
-    }
-    
-   
-}
